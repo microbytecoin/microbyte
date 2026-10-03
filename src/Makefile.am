@@ -136,11 +136,11 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_VERGEd
-  bin_PROGRAMS += verged
+  bin_PROGRAMS += microbyted
 endif
 
 if BUILD_VERGE_UTILS
-  bin_PROGRAMS += verge-cli verge-tx
+  bin_PROGRAMS += microbyte-cli microbyte-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -564,18 +564,18 @@ nodist_libverge_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # verged binary #
-verged_SOURCES = verged.cpp
-verged_CPPFLAGS = $(AM_CPPFLAGS) $(VERGE_INCLUDES) $(LIBEVENT_CFLAGS) $(LIBSECCOMP_CFLAGS) $(LIBCAP_CFLAGS) $(ZLIB_CFLAGS)
-verged_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-verged_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+microbyted_SOURCES = verged.cpp
+microbyted_CPPFLAGS = $(AM_CPPFLAGS) $(VERGE_INCLUDES) $(LIBEVENT_CFLAGS) $(LIBSECCOMP_CFLAGS) $(LIBCAP_CFLAGS) $(ZLIB_CFLAGS)
+microbyted_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+microbyted_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-verged_SOURCES += verged-res.rc
+microbyted_SOURCES += verged-res.rc
 endif
 
 
 
-verged_LDADD = \
+microbyted_LDADD = \
   $(libverge_SERVER) \
   $(libverge_WALLET) \
   $(libverge_COMMON) \
@@ -594,7 +594,7 @@ verged_LDADD = \
   $(LIBCAP_LIBS) \
   $(ZLIB_LIBS)
 
-verged_LDADD  += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(LIBEVENT_LDFLAGS) $(LIBSECCOMP_LDFLAGS) $(LIBCAP_LDFLAGS) -lz
+microbyted_LDADD  += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(LIBEVENT_LDFLAGS) $(LIBSECCOMP_LDFLAGS) $(LIBCAP_LDFLAGS) -lz
 
 # if BUILD_DARWIN
 # verged_CPPFLAGS += -I/usr/local/opt/libomp/include
@@ -603,35 +603,35 @@ verged_LDADD  += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNP
 # endif
 
 # verge-cli binary #
-verge_cli_SOURCES = verge-cli.cpp
-verge_cli_CPPFLAGS = $(AM_CPPFLAGS) $(VERGE_INCLUDES) $(EVENT_CFLAGS)
-verge_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-verge_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+microbyte_cli_SOURCES = verge-cli.cpp
+microbyte_cli_CPPFLAGS = $(AM_CPPFLAGS) $(VERGE_INCLUDES) $(EVENT_CFLAGS)
+microbyte_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+microbyte_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-verge_cli_SOURCES += verge-cli-res.rc
+microbyte_cli_SOURCES += verge-cli-res.rc
 endif
 
-verge_cli_LDADD = \
+microbyte_cli_LDADD = \
   $(libverge_CLI) \
   $(LIBUNIVALUE) \
   $(libverge_UTIL) \
   $(libverge_CRYPTO)
 
-verge_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+microbyte_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # verge-tx binary #
-verge_tx_SOURCES = verge-tx.cpp
-verge_tx_CPPFLAGS = $(AM_CPPFLAGS) $(VERGE_INCLUDES)
-verge_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-verge_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+microbyte_tx_SOURCES = verge-tx.cpp
+microbyte_tx_CPPFLAGS = $(AM_CPPFLAGS) $(VERGE_INCLUDES)
+microbyte_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+microbyte_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-verge_tx_SOURCES += verge-tx-res.rc
+microbyte_tx_SOURCES += verge-tx-res.rc
 endif
 
-verge_tx_LDADD = \
+microbyte_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(libverge_COMMON) \
   $(libverge_UTIL) \
@@ -639,7 +639,7 @@ verge_tx_LDADD = \
   $(libverge_CRYPTO) \
   $(LIBSECP256K1)
 
-verge_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+microbyte_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # vergeconsensus library #

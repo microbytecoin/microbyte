@@ -476,7 +476,7 @@ unsigned int GetAlgoWeight(int algo)
         case ALGO_GROESTL:
             return (unsigned int)(0.005 * 100000);
         case ALGO_BLAKE:
-            return (unsigned int)(0.00015 * 100000);
+            return (unsigned int)(1 * 100000);
         case ALGO_X17:
             return (unsigned int)(6 * 100000);
         case ALGO_LYRA2RE:

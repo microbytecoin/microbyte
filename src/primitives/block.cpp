@@ -16,7 +16,7 @@
 #include <crypto/pow/hashx17.h>
 #include <crypto/pow/Lyra2RE.h>
 
-int ALGO = ALGO_SCRYPT;
+int ALGO = ALGO_BLAKE;
 
 uint256 CBlockHeader::GetHash() const
 {

@@ -13,7 +13,7 @@
  * for both verged and verge-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("verge");
+const std::string CLIENT_NAME("microbyte");
 
 /**
  * Client version number

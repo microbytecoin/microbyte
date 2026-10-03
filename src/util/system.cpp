@@ -82,7 +82,7 @@
 // Application startup time (used for uptime calculation)
 const int64_t nStartupTime = GetTime();
 
-const char * const VERGE_CONF_FILENAME = "VERGE.conf";
+const char * const VERGE_CONF_FILENAME = "microbyte.conf";
 const char * const VERGE_PID_FILENAME = "verged.pid";
 
 ArgsManager gArgs;
@@ -719,7 +719,7 @@ fs::path GetDefaultDataDir()
     // Unix: ~/.verge
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "VERGE";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "MicroByte";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -732,7 +732,7 @@ fs::path GetDefaultDataDir()
     return pathRet / "Library/Application Support/VERGE";
 #else
     // Unix
-    return pathRet / ".VERGE";
+    return pathRet / ".microbyte";
 #endif
 #endif
 }

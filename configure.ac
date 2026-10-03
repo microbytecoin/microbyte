@@ -31,10 +31,10 @@ if test -n "$PKG_CONFIG_LIBDIR"; then
   PKG_CONFIG="env PKG_CONFIG_LIBDIR=$PKG_CONFIG_LIBDIR $PKG_CONFIG"
 fi
 
-VERGE_DAEMON_NAME=verged
+VERGE_DAEMON_NAME=microbyted
 VERGE_GUI_NAME=verge-qt
-VERGE_CLI_NAME=verge-cli
-VERGE_TX_NAME=verge-tx
+VERGE_CLI_NAME=microbyte-cli
+VERGE_TX_NAME=microbyte-tx
 
 dnl Unless the user specified ARFLAGS, force it to be cr
 dnl This is also the default as-of libtool 2.4.7

@@ -81,7 +81,7 @@ void run_tor() {
     argv.push_back("--HiddenServiceVersion");
     argv.push_back("3");
     argv.push_back("--HiddenServicePort");
-    argv.push_back("21102");
+    argv.push_back("41820");
     argv.push_back("--CookieAuthentication");
     argv.push_back("1");
 

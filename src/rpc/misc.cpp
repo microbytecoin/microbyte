@@ -496,6 +496,9 @@ UniValue setalgo(const JSONRPCRequest& request)
     if (newAlgo < 0) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Unknown mining algorithm: %s", strAlgo));
     }
+    if (newAlgo != ALGO_BLAKE) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "MicroByte only supports blake");
+    }
     obj.pushKV("old_algo", GetAlgoName(ALGO));
     ALGO = newAlgo;
     obj.pushKV("new_algo", GetAlgoName(ALGO));

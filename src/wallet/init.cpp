@@ -106,7 +106,7 @@ bool WalletInit::ParameterInteraction() const
         LogPrintf("%s: parameter interaction: -blocksonly=1 -> setting -walletbroadcast=0\n", __func__);
     }
         // determine mining Algo
-    std::string strAlgo = gArgs.GetArg("-algo", "scrypt");
+    std::string strAlgo = gArgs.GetArg("-algo", "blake");
     transform(strAlgo.begin(),strAlgo.end(),strAlgo.begin(),::tolower);
     ALGO = GetAlgoByName(strAlgo);
     if (ALGO < 0) {

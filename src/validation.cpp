@@ -1217,38 +1217,29 @@ bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex
     return ReadRawBlockFromDisk(block, block_pos, message_start);
 }
 
+struct RewardTier {
+    int lastHeight;   // inclusive upper bound
+    CAmount reward;
+};
+
+static const RewardTier REWARD_TIERS[] = {
+    { 1666666, 8 * COIN },
+    { 3333332, 4 * COIN },
+    { 4999998, 2 * COIN },
+    { 6666664, 1 * COIN },
+};
+
+static const CAmount TAIL_EMISSION = COIN / 2;
+
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
-    if (nHeight<14001 && nHeight>0)
-    	return 200000 * COIN;
-    if (nHeight<28001 && nHeight>14000)
-        return 100000 * COIN;
-    if (nHeight<42001 && nHeight>28000)
-        return 50000 * COIN;
-    if (nHeight<210001 && nHeight>42000)
-        return 25000 * COIN;
-    if (nHeight<378001 && nHeight>210000)
-        return 12500 * COIN;
-    if (nHeight<546001 && nHeight>378000)
-        return 6250 * COIN;
-    if (nHeight<714001 && nHeight>546000)
-        return 3125 * COIN;
-    if (nHeight<2124001 && nHeight>714000)
-        return 1560 * COIN;
-    if (nHeight<3700001 && nHeight>2124000)
-        return 730 * COIN;
-
-    const int lastIrregularBlock = 3700001;
-    const int newSubsidyHeight = nHeight - lastIrregularBlock;
-
-    const CAmount initialHalvingRewards = 400 * COIN;
-    const int halvingCount = newSubsidyHeight / consensusParams.nSubsidyHalvingInterval;
-
-    if (halvingCount < 7) {
-        return initialHalvingRewards >> halvingCount;
+    if (nHeight <= 0)
+        return 0;
+    for (const RewardTier& tier : REWARD_TIERS) {
+        if (nHeight <= tier.lastHeight)
+            return tier.reward;
     }
-
-    return 0;
+    return TAIL_EMISSION;
 }
 
 bool IsInitialBlockDownload()
@@ -3339,6 +3330,11 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
     if((block.nVersion < 4 && nHeight >= consensusParams.STEALTH_TX_SWITCH_BLOCK))
             return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),
                                  strprintf("rejected nVersion=0x%08x block", block.nVersion));
+
+    if (block.GetAlgo() != ALGO_BLAKE) {
+        return state.DoS(100, false, REJECT_INVALID, "bad-blk-algo-not-blake2s", false,
+                         "only Blake2s blocks are accepted");
+    }
 
     if (nHeight > consensusParams.FlexibleMiningAlgorithms && !hasUsedValidMiningAlgorithm(block, pindexPrev)) {
         return state.DoS(25, false, REJECT_INVALID, "bad-blk-algorithm", false,
