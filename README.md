@@ -1,461 +1,147 @@
-<p align="center"><img src="https://raw.githubusercontent.com/vergecurrency/VERGE/master/readme-header.png" alt="Verge Source Code"></p>
-<p align="center">
-  <img src="https://img.shields.io/badge/status-stable-green.svg">
-  <a href="https://github.com/vergecurrency/verge/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg">
-  <img src="https://img.shields.io/badge/C%2B%2B-17%2F20-blue.svg">
-  <a href="https://github.com/vergecurrency/verge/releases/latest"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/vergecurrency/verge/total?logo=GitHub"></a>
-  <a href="https://github.com/vergecurrency/VERGE/commits"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/vergecurrency/VERGE">
-  <a href="https://github.com/vergecurrency/verge/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/vergecurrency/verge">
-  <a href="https://discord.gg/vergecurrency"><img alt="Discord" src="https://img.shields.io/discord/325024453065179137">
-  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/vergecurrency/verge">
- <a href="https://x.com/vergecurrency"><img alt="X (formerly Twitter) Follow VergeCurrency!" src="https://img.shields.io/twitter/follow/vergecurrency?logo=twitter&logoColor=teal&labelColor=black&color=black">
-</p>
-<br>
+# MicroByte (MBC)
 
-# VERGE Source Code [XVG]
+MicroByte is a proof-of-work cryptocurrency forked from [Verge Core](https://github.com/vergecurrency/verge) v26.8. It keeps Verge's codebase but runs a single mining algorithm (Blake2s), its own genesis block, its own network parameters and its own block reward schedule.
 
-Latest commit build status:
-<p align="left">
-  <a href="https://github.com/vergecurrency/verge/actions/workflows/check-commit.yml">
-  <img src="https://github.com/vergecurrency/verge/actions/workflows/check-commit.yml/badge.svg">
-  </a>
-</p>
+> **Status: experimental.** MicroByte is running on a private test chain only. Consensus parameters, including the genesis block, may change before any public launch. Do not treat any coins on the test chain as having value.
 
-## Build Requirements
-
-Verge Core requires a modern C++ toolchain and has migrated to reduce external dependencies for better performance and maintainability.
-
-### Minimum Requirements
-
-| Component | Requirement | Notes |
-|-----------|-------------|--------|
-| **Compiler** | GCC 9.0+ / Clang 10.0+ / MSVC 2019+ | C++17 support required |
-| **C++ Standard** | C++17 (targeting C++20) | Modern features for better performance |
-| **CMake** | 3.16+ | Recommended build system |
-| **Boost** | 1.70+ (selective components) | Reduced dependency footprint |
-
-### Supported Operating Systems
-
-| OS | Version | Architecture |
-|----|---------|--------------|
-| **Ubuntu** | 22.04, 24.04 | x64, ARM64 |
-| **Debian** | 11+ | x64, ARM64 |
-| **CentOS/RHEL** | 8+ | x64 |
-| **macOS** | 13.0+ (Ventura), 14.0 (Sonoma) |x64, ARM64 (Apple Silicon) |
-| **Windows** | 10 32bit/64bit, 11 32bit/64bit | x86, x64 |
-
-## Modern C++ Migration Benefits
-
-### 🚀 **Performance Improvements**
-- **Faster Compilation**: Reduced template instantiation overhead
-- **Better Optimization**: Modern compiler optimizations with C++17/20
-- **Memory Efficiency**: Smart pointers and RAII reduce memory leaks
-- **Parallel Processing**: Standard library threading primitives
-
-### 📦 **Reduced Dependencies**
-- **Smaller Binary Size**: Less dependency on external libraries
-- **Easier Deployment**: Fewer runtime dependencies to manage
-- **Simplified Building**: Standard library features reduce complex linking
-
-### 🛡️ **Enhanced Security & Reliability**
-- **Memory Safety**: Smart pointers prevent common vulnerabilities
-- **Type Safety**: Modern C++ type system catches errors at compile time
-- **Thread Safety**: Better concurrency primitives prevent race conditions
-- **Exception Safety**: RAII patterns ensure proper resource cleanup
-
-### 🔧 **Developer Experience**
-- **Modern Tooling**: Better IDE support and debugging
-- **Cleaner Code**: More expressive and maintainable codebase
-- **Faster Development**: Standard library features reduce boilerplate
-- **Better Testing**: Modern testing frameworks and practices
+MicroByte is not affiliated with or endorsed by the Verge project.
 
 ## Specifications
 
-Specification | Value
---- | ---
-Protocol | PoW (proof of Work)
-Algorithms | scrypt, x17, Lyra2rev2, myr-groestl, & blake2s
-Blocktime | 30 seconds
-Total Supply | 16,521,951,238 XVG (Complete!)
-RPC port | 20102 (testnet: 21102)
-P2P port | 21102 (testnet: 21104)
-pre-mine | Not Applicable
-ICO | Not Applicable
+| Specification | Value |
+|---|---|
+| Consensus | Proof of work |
+| Algorithm | Blake2s only (other algorithms are rejected) |
+| Block time | 30 seconds |
+| Block signature | Required (coinbase pays a public key, block is signed with it) |
+| Coinbase maturity | 120 blocks |
+| P2P port | 41820 |
+| RPC port | 41821 |
+| Address prefix | `M` (pubkey byte 50, script byte 55) |
+| Bech32 prefix | `mb` |
+| Network magic bytes | `c3 9e d1 a7` |
+| Pre-mine / ICO | None (the genesis block pays nothing) |
 
-## RPC Reference
+### Block rewards
 
-See [RPC.md](RPC.md) for the complete `verged`/`verge-qt` RPC command reference, including wallet, network, raw transaction, mining, and secure messaging commands.
+Fees are paid to the miner in addition to the subsidy.
 
-## Secure Messaging (SMSG)
+| Block range | Subsidy | Coins issued in range |
+|---|---|---|
+| 1 to 1,666,666 | 8 MBC | 13,333,328 |
+| 1,666,667 to 3,333,332 | 4 MBC | 6,666,664 |
+| 3,333,333 to 4,999,998 | 2 MBC | 3,333,332 |
+| 4,999,999 to 6,666,664 | 1 MBC | 1,666,666 |
+| 6,666,665 onward | 0.5 MBC | open-ended tail |
 
-Verge Secure Messaging (SMSG) is paid, encrypted wallet-to-wallet messaging. Messages use a shared chatkey in the form:
+The four halving eras issue 24,999,990 MBC (about 25 million) in roughly 6.3 years at 30-second blocks. After that, a permanent 0.5 MBC tail subsidy (about 525,600 MBC per year) continues, so supply is not hard-capped.
 
-```text
-vergeaddress-publickey
-```
+### Difficulty
 
-`verge-qt` starts with SMSG enabled by default because it is normally used by wallet users. `verged` starts with SMSG disabled by default as a security measure for infrastructure deployments such as pools, exchanges, explorers, and public RPC nodes. This keeps infrastructure nodes from relaying, storing, and indexing SMSG data unless the operator explicitly opts in.
+Blocks below height 450 are mined at the minimum difficulty. From height 450, difficulty retargets on every block toward the 30-second target. With a small number of miners, expect block times to swing noticeably around the target.
 
-To enable SMSG on `verged`, add this to `verge.conf` or pass it on the command line:
+### Genesis block (test chain)
 
-```ini
-smsg=1
-```
+| Field | Value |
+|---|---|
+| Time | 1790978287 |
+| Nonce | 718875 |
+| Hash | `000000f9d7e4d320e006e4ee28ff8c6f59ed7ed69df8f70d47f1638e3ba46abe` |
+| Merkle root | `efeac44bfd7be254c1dca7cbc66db946aebe4123ef4e8c49b6756a15feb227d6` |
 
-Optional SMSG daemon settings:
+The block ID is the scrypt hash of the header. The proof of work is the Blake2s hash, which is what `pow_hash` shows in `getblock`.
 
-```ini
-# Scan the chain for chatkey funding/public-key data on startup.
-smsgscanchain=1
+## Differences from Verge
 
-# Scan incoming blocks for new SMSG public-key data.
-smsgscanincoming=1
+- Blake2s is the only accepted algorithm. `setalgo` rejects anything else.
+- The multi-algorithm checks are switched off through the fork heights in `chainparams.cpp`.
+- New reward schedule, genesis block, ports, magic bytes and address prefixes.
+- Verge's seed nodes, checkpoints and chain-work values are removed.
+- Binaries are `microbyted`, `microbyte-cli` and `microbyte-tx`.
+- The data directory is `~/.microbyte` and the config file is `microbyte.conf`.
+- Default minimum fee is 0.001 MBC per kB (a policy setting, not a consensus rule).
 
-# Target number of validated SMSG relay peers to maintain.
-smsgpeers=3
-```
+Inherited from Verge and not tested for MicroByte: stealth addresses, secure messaging (SMSG), Tor support.
 
-Basic `verged` SMSG workflow:
+## Building from source
 
-```shell
-# Start verged with SMSG enabled for this run.
-verged -smsg=1
+Only Linux has been tested (Ubuntu). The steps below follow what has been built and run so far.
 
-# Create or choose a normal wallet address, then publish a local chatkey for it.
-verge-cli getnewaddress "chat"
-verge-cli smsgaddlocaladdress <youraddress>
-
-# Show your shareable chatkey.
-verge-cli smsggetpubkey <youraddress>
-
-# Save another user's dashed chatkey and send a paid message.
-verge-cli smsgaddaddress <theiraddress> <theirpublickey>
-verge-cli smsgsend <youraddress> "<theiraddress>-<theirpublickey>" "hello" true 31
-
-# Read messages.
-verge-cli smsginbox all
-verge-cli smsgoutbox all
-```
-
-If the wallet is encrypted, unlock it before creating chatkeys or sending messages:
+### 1. Dependencies
 
 ```shell
-verge-cli walletpassphrase "your passphrase" 300
-```
-
-SMSG paid messages default to 31 days of retention, and the sender can choose a lower retention period from 1 to 31 days. See [RPC.md](RPC.md#secure-messaging) for the full secure messaging RPC reference.
-
-## Blockrewards
-Block Number Range | Reward
---- | ---
-0 to 14,000 | 200,000 coins
-14,001 to 28,000 | 100,000 coins
-28,001 to 42,000 | 50,000 coins
-42,001 to 210,000 | 25,000 coins
-210,001 to 378,000 | 12,500 coins
-378,001 to 546,000 | 6,250 coins
-546,001 to 714,000 | 3,125 coins
-714,001 to 2,124,000 | 1,560 coins
-2,124,001 to 3,700,000 | 730 coins
-3,700,001 to 4,200,000 | 400 coins
-4,200,001 to 4,700,000 | 200 coins
-4,700,001 to 5,200,000 | 100 coins
-5,200,001 to 5,700,000 | 50  coins
-5,700,001 to 6,200,000 | 25  coins
-6,200,001 to 6,700,000 | 12.5 coins
-6,700,001 to 7,200,000 | 6.25 coins
-7,200,001+             | 0.0 coins
-
-## Resources
-
-* [Blockchain Explorer] (https://verge-blockchain.info/) https://verge-blockchain.info/
-* [Blockchain Explorer] (https://xvgblockexplorer.com/) https://xvgblockexplorer.com/
-* [Blockchain Explorer Testnet] (https://testnet.verge-blockchain.info/) https://testnet.verge-blockchain.info/
-* [Network Hash and Difficulty] (https://vergecurrency.network/d/VmzuEE5Mk/verge-blockchain?) https://vergecurrency.network/d/VmzuEE5Mk/verge-blockchain
-* [Network Transaction Information] (https://network.verge-blockchain.com/d/e8a7802b-23c3-4d81-88f3-fcd0e2efb235/) https://network.verge-blockchain.com/d/e8a7802b-23c3-4d81-88f3-fcd0e2efb235/ (all real transactions only! empty blocks, mining pool txs, etc are filtered out!)
-* [Mining Pool List] (https://miningpoolstats.stream/) Most pools of our 5 algorithms can be found here!
-* [Black Paper] (https://vergecurrency.com/static/blackpaper/verge-blackpaper-v5.0.pdf) Verge's whitepaper can be found here!
-
-## Building From Source
-
-* [Unix Instructions](doc/build-unix.md)
-* [OS X Instructions](doc/build-osx.md)
-* [Windows Instructions](doc/build-windows.md)
-* [Raspberry Pi/aarch64 Instructions](doc/build-pi-aarch64.md)
-
-### Build Verge-Qt Without Qt WebEngine
-
-If you only need the Qt wallet without WebEngine, you can build with:
-
-```shell
-./autogen.sh
-cd depends
-make -j"$(nproc)" HOST=x86_64-linux-gnu QT_SKIP_WEBENGINE=1 QT_SKIP_QTDECLARATIVE=1
-cd ..
-
-CONFIG_SITE="$PWD/depends/x86_64-linux-gnu/share/config.site" \
-./configure --enable-scrypt-sse2 --disable-bench --disable-tests \
-  --disable-dependency-tracking --disable-werror \
-  --prefix="$PWD/depends/x86_64-linux-gnu"
-
-make -j"$(nproc)"
-```
-
-Notes:
-- This produces a Qt wallet build without Qt WebEngine.
-- WebEngine-backed UI features (including the Trade tab web widget) are unavailable in this build type.
-
-### Community
-
-* [Telegram](https://t.me/officialxvg)
-* [Discord](https://discord.gg/vergecurrency)
-* [Twitter](https://www.twitter.com/vergecurrency)
-* [Facebook](https://www.facebook.com/VERGEcurrency/)
-* [Reddit](https://www.reddit.com/r/vergecurrency/)
-
-## Wallets
-
-Binary (pre-compiled) wallets are available on all platforms here in [Releases](https://github.com/vergecurrency/verge/releases).
-
-> **Note:** **Important!** Only download pre-compiled wallets from the official Verge website or official Github repos.
-
-> **Note:** For a fresh wallet install you can reduce the blockchain syncing time by downloading [a nightly snapshot](https://verge-blockchain.com/down) and following the [setup instructions](https://verge-blockchain.com/howto).
-
-### Windows Wallet Usage
-
-1. Download the pre-compiled software from the releases section here.
-2. Install
-3. In windows file explorer, open `c:\Users\XXX\AppData\Roaming\VERGE` (be sure to change XXX to your windows user)
-4. Right click and create a new file `verge.txt`
-5. Edit the file to have the following contents. Local RPC clients use the automatically generated authentication cookie, so no static RPC password is required.
-
-    ```
-    rpcport=20102
-    port=21102
-    daemon=1
-    algo=groestl
-    ```
-
-6. Save and close the file
-7. Rename the file to `verge.conf`
-8. Start the VERGE-qt program.
-9. Open up VERGE-qt console and run `getinfo` (or `getmininginfo`) to verify settings.
-
-> **Note:** You must re-start the wallet after making changes to `verge.conf`.
-
-### MacOS Wallet
-
-1. Download the pre-compiled macos software from the releases section here.
-2. Double click the DMG
-3. Drag the Verge-Qt to your Applications folder
-4. Double click the Verge-Qt application to open it.
-5. Go grab a :coffee: while it syncs with the blockchain
-
-> **Note:** It may look like it is frozen or hung while it is indexing and syncing the blockchain. It's not. It's chugging away, but currently the UI doesn't give you a lot of feedback on status. We're working to fix that. Syncing takes a while to complete (ie. > 10 minutes or more) so just be patient.
-
-> **Note:** If you want to change your configuration the file is located at `~/Library/Application\ Support\VERGE\VERGE.conf`. This isn't required by default.
-
-### Unix Wallet
-
-1. Compile using [Unix instructions](doc/build-unix.md).
-2. The wallet GUI is in `./verge/src/qt` and the daemon in `./verge/src`.
-3. **Optional** - the binaries to your favorite location. for use by all users, run the following commands:
-
-    ```shell
-    sudo cp src/verged /usr/bin/
-    sudo cp src/qt/verge-qt /usr/bin/
-    ```
-
-4. Run `./verged` from wherever you put it. The output from this command will tell you that you need to make a `verge.conf` file and will suggest some good starting values.
-5.  Open up your new config file that was created in your home directory in your favorite text editor
-
-    ```shell
-    nano ~/.VERGE/verge.conf
-    ```
-
-6. Add the desired node settings to `verge.conf`. Local RPC clients use the automatically generated authentication cookie. For remote RPC access, generate a unique `rpcauth` entry with [`share/rpcauth/rpcauth.py`](share/rpcauth/README.md) and restrict `rpcbind` and `rpcallowip` to trusted networks.
-
-    ```
-    rpcport=20102
-    port=21102
-    daemon=1
-    algo=groestl
-    ```
-
-7. Save the file and exit your editor. If using `nano` type `ctrl + x` on your keyboard and the `y` and hitting enter. This should have created a `verge.conf` file with what you just added.
-
-8. Start the Verge daemon again
-
-    ```shell
-    ./path/to/verged
-    ```
-
-> **Note:** To check the status of how much of the blockchain has been downloaded (aka synced) type `./path/to/verged getinfo`.
-
-> **Note**: If you see something like 'Killed (program cc1plus)' run ```dmesg``` to see the error(s)/problems(s). This is most likely caused by running out of resources. You may need to add some RAM or add some swap space.
-
-You can also check out this [Linux Wallet Video Tutorial](https://www.youtube.com/watch?v=WYe75b6RWes).
-
-
-## Use [Unstoppable Domains](https://unstoppabledomains.com)
-
-To use VERGE with Unstoppable Domains for sending coins using Web3 Domains just put the name of the domain (ie: sunerok.crypto) in the "Pay To:" input in the Send tab of the wallet.
-
-## Developer Notes
-
-### Modern C++ Migration
-
-Verge Core is actively migrating to modern C++ standards and practices:
-
-- **C++17 Standard**: Full adoption with selective C++20 features
-- **Reduced Boost Dependencies**: Migrating to standard library equivalents
-- **Smart Pointers**: RAII and memory safety improvements
-- **Thread Safety**: Modern concurrency patterns with `std::mutex` and `std::atomic`
-
-### Coding Standards
-
-- Use `std::filesystem` instead of `boost::filesystem`
-- Prefer `std::thread` over `boost::thread`
-- Use `std::unique_ptr`/`std::shared_ptr` instead of raw pointers
-- Apply `const` correctness and `noexcept` specifications
-- Follow RAII principles for resource management
-
-### Quick Build (Ubuntu/Debian)
-
-```shell
-# Install modern dependencies
 sudo apt update
-sudo apt install -y \
-    build-essential cmake git \
-    libssl-dev libevent-dev \
-    libdb4.8-dev libdb4.8++-dev \
-    libboost-system-dev libboost-filesystem-dev libboost-test-dev \
-    libminiupnpc-dev libqt5gui5 libqt5core5a libqt5dbus5 \
-    qttools5-dev qttools5-dev-tools \
-    libprotobuf-dev protobuf-compiler \
-    libqrencode-dev libseccomp-dev libcap-dev
-
-# Clone and build
-git clone https://github.com/vergecurrency/VERGE && cd VERGE
-./autogen.sh && ./configure --enable-cxx17 && make -j$(nproc)
+sudo apt install build-essential libtool autotools-dev automake pkg-config \
+  libssl-dev libevent-dev bsdmainutils libboost-all-dev libminiupnpc-dev \
+  libzmq3-dev libseccomp-dev libsqlite3-dev libqrencode-dev git
 ```
 
-### Advanced Build with CMake (Recommended)
+The wallet needs BerkeleyDB 4.8, which Ubuntu does not package. Build it from source, or use the system library for fresh wallets only with `--with-incompatible-bdb`. Wallet files created with a different BDB version are not portable.
+
+### 2. Build
 
 ```shell
-# Modern build approach
-mkdir build && cd build
-cmake .. -DCMAKE_CXX_STANDARD=17 -DCMAKE_BUILD_TYPE=Release
-cmake --build . --parallel $(nproc)
-```
-
-> **Performance Tip**: Use `make -j$(nproc)` or `cmake --build . --parallel` to utilize all CPU cores.
-
-> **Memory Note**: If you encounter memory issues, either add swap space or reduce parallelism with `-j2`.
-
-
-
-
-### macOS Development
-
-> **Requirements:** macOS 12.0+ (Monterey), Xcode 13.0+, Command Line Tools
-
-#### Intel and Apple Silicon Support
-
-```shell
-# Install Homebrew dependencies
-brew install cmake boost openssl libevent berkeley-db4
-brew install qt5 protobuf qrencode miniupnpc
-
-# For Apple Silicon Macs, you may need to specify paths
-export PATH="/opt/homebrew/bin:$PATH"
-export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH"
-
-# Clone and build
-git clone https://github.com/vergecurrency/VERGE && cd VERGE
+git clone https://github.com/microbytecoin/microbyte.git
+cd microbyte
 ./autogen.sh
-./configure --enable-cxx17 --with-boost=/opt/homebrew
-make -j$(sysctl -n hw.ncpu)
+./configure --without-gui --disable-bench --disable-tests \
+  BDB_LIBS="-L$HOME/db4/lib -ldb_cxx-4.8" \
+  BDB_CFLAGS="-I$HOME/db4/include"
+make -j2
 ```
 
-#### CMake Build (Recommended for macOS)
+Adjust the BDB paths to wherever you built it. Do not use `--disable-wallet` if you want to mine, because block signing needs the wallet.
+
+On a machine with 2 GB of RAM or less, add swap before compiling, and keep `-j` low. A message like `Killed` during `make` means the build ran out of memory.
+
+The binaries are in `src/` (the real executables are in `src/.libs/` and `src/microbyted` is a libtool wrapper).
+
+## Running a node
+
+Create `~/.microbyte/microbyte.conf`:
+
+```ini
+server=1
+daemon=1
+rpcuser=choose_a_user
+rpcpassword=choose_a_long_random_password
+```
+
+Start the node and check it:
 
 ```shell
-mkdir build && cd build
-cmake .. \
-    -DCMAKE_CXX_STANDARD=17 \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_PREFIX_PATH="/opt/homebrew/opt/qt5" \
-    -DOPENSSL_ROOT_DIR="/opt/homebrew/opt/openssl"
-cmake --build . --parallel $(sysctl -n hw.ncpu)
+./src/microbyted -daemon
+./src/microbyte-cli getblockchaininfo
 ```
 
-> **Apple Silicon Note**: Some dependencies may need explicit paths. Use `brew --prefix` to find installation directories.
+The RPC password is read when the node starts. After changing it, restart the node. Shut down with `microbyte-cli stop`, or send `SIGTERM`. Do not use `kill -9`.
 
-### Windows Wallet
-
-TODO. Take a look at [building/windows](./building/windows).
-
-## Docker Images
-
-Check out the [`contrib/readme`](https://github.com/vergecurrency/VERGE/tree/master/contrib/docker) for more information.
+To connect nodes to each other, add `addnode=<ip>:41820` to the config and open port 41820 in the firewall.
 
 ## Mining
 
-### Solo mining
+The node has a built-in CPU miner:
 
-Instead of joining a mining pool you can use the wallet to mine all by yourself. You need to specify the algorithm (see below) and set the "gen" flag. For instance, in the configuration specify `gen=1`.
-
-### Using different algorithms
-
-To use a specific mining algorithm use the `algo` switch in your configuration file (`.conf` file) or from the command line (like this `--algo=x17`). Here are the possible values:
-
-```
-algo=x17
-algo=scrypt
-algo=groestl
-algo=lyra
-algo=blake
+```shell
+./src/microbyte-cli -rpcclienttimeout=0 generate 10 2000000000
 ```
 
-## TestNet
+Notes:
 
-Here is a list of active testnet nodes:
-* ddvnucmtvyiemiuk.onion (sunerok)
-* uacxdw34wnfybshfjs6hxdfzwkqxs765peu4iyyakqnz2mqyvspubeqd.onion (dedicated testnet)
+- The second argument is the **total** hash budget for the whole call, not a per-block limit. The largest accepted value is 2147483647. If the call returns fewer blocks than requested, run it again.
+- Use `generate`, not `generatetoaddress`. Blocks must pay a raw public key and be signed with it. `generate` does this with a wallet key, while `generatetoaddress` pays a normal address and produces blocks that fail validation.
+- Once difficulty rises above the minimum, a single block can take minutes on a CPU. The node keeps mining even if the CLI times out, so check `getblockcount` before starting another `generate`.
+- Block version for mined blocks is 8196.
 
-## Donations
+## Wallet safety
 
-We believe in keeping Verge free and open. Any donations to help fuel the development effort are greatly appreciated! :smile:
+- Back up your wallet: `microbyte-cli backupwallet /path/to/backup.dat`. Keep copies off the server.
+- Never commit `wallet.dat`, `microbyte.conf` or backups to the repository.
 
-* Address for donations in Verge (XVG): `DDd1pVWr8PPAw1z7DRwoUW6maWh5SsnCcp`
-* Address for donations in Bitcoin (BTC): `142r3vCAH3AzABiQjFPmcrSCp6TDzEDuB1`
+## License and attribution
 
-## Special Shout Outs
+MicroByte is released under the MIT license, the same as Verge Core. Copyright notices of the Verge Core developers, the Bitcoin Core developers and other upstream authors are retained, as the license requires. See [COPYING](COPYING).
 
-Special thanks to the following people that have helped make Verge possible. :raised_hands:
+## Reporting issues
 
-Sunerok, CryptoRekt, MKinney, BearSylla, Hypermist, Pallas1, FuzzBawls, BuZz, glodfinch, InfernoMan, AhmedBodi, BitSpill, MentalCollatz, ekryski and the **entire** #VERGE community!
-
-
-
-
-# Bug Reporting
-
-If you think you've found a bug or a problem with VERGE, please let us know! First, search our issue tracker to see if someone has already reported the problem. If they haven't, open a new issue, and fill out the template with as much information as possible. The more you can tell us about the problem and how it occurred, the more likely we are to fix it.
-
-## _Please do not report security vulnerabilities publicly._
-
-
-## How to report a bug
-
-### Code issues
-
-Since we are a 100% open-source project we strongly prefer if you create a pull-request on Github in the proper repository with the necessary fix.
-
-Alternatively, if you would like to make a suggestion regarding a potential fix please send an email to contact@vergecurrency.com
-
-
-### Security-related issues
-
-Contact the developers privately by sending an e-mail to contact@vergecurrency.com with the details of the issue. Do not post the issue on github or anywhere else until the issue has been resolved.
+To be added. Please do not report security vulnerabilities in public issues.
